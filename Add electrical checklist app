@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>KOUMS Electrical Checklist</title>
     
-    <!-- Link to manifest.json file -->
+    <!-- Link to manifest.json - THIS IS CRITICAL FOR PWABUILDER -->
     <link rel="manifest" href="manifest.json">
     
     <style>
@@ -315,6 +315,7 @@
     <button class="tab" onclick="showTab('export')">📤 Import/Export</button>
 </div>
 
+<!-- List Tab -->
 <div id="listTab">
     <div class="form-card">
         <div class="filter-bar">
@@ -331,6 +332,7 @@
     </div>
 </div>
 
+<!-- Form Tab -->
 <div id="formTab" class="hidden">
     <div class="form-card">
         <div class="section-title">📍 Location Details</div>
@@ -370,6 +372,7 @@
     </div>
 </div>
 
+<!-- Export Tab -->
 <div id="exportTab" class="hidden">
     <div class="form-card">
         <div class="section-title">📥 Import Data</div>
@@ -385,6 +388,7 @@
     </div>
 </div>
 
+<!-- View/Edit Modal -->
 <div id="viewModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
@@ -597,9 +601,9 @@
             const key = item.replace(/\s/g, '');
             let value = inspection[key] || "NOT_CHECKED";
             let emoji = value === "OK" ? "✅" : (value === "DEFECT" ? "⚠️" : (value === "NA" ? "➖" : "❓"));
-            itemsHtml += `<tr style="border-bottom:1px solid #eee;"><td style="padding:6px 0;">${item}</td><td style="padding:6px 0;">${emoji} ${value}</td></tr>`;
+            itemsHtml += `<tr style="border-bottom:1px solid #eee;"><td style="padding:6px 0;">${item}</td><td style="padding:6px 0;">${emoji} ${value}<tr></tr>`;
         });
-        itemsHtml += '</table>';
+        itemsHtml += '赶';
         
         modalBody.innerHTML = `
             <p><strong>Block:</strong> ${inspection.block}</p>
