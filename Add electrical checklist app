@@ -4,10 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>KOUMS Electrical Checklist</title>
-    
-    <!-- Link to manifest.json - THIS IS CRITICAL FOR PWABUILDER -->
-    <link rel="manifest" href="manifest.json">
-    
     <style>
         * {
             margin: 0;
@@ -29,7 +25,6 @@
             border-radius: 12px;
             margin-bottom: 16px;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .app-bar h1 {
@@ -143,7 +138,6 @@
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: opacity 0.2s;
         }
 
         .btn-primary {
@@ -178,7 +172,6 @@
             padding: 12px;
             margin-bottom: 10px;
             cursor: pointer;
-            transition: background 0.2s;
         }
 
         .inspection-item:hover {
@@ -315,7 +308,6 @@
     <button class="tab" onclick="showTab('export')">📤 Import/Export</button>
 </div>
 
-<!-- List Tab -->
 <div id="listTab">
     <div class="form-card">
         <div class="filter-bar">
@@ -332,7 +324,6 @@
     </div>
 </div>
 
-<!-- Form Tab -->
 <div id="formTab" class="hidden">
     <div class="form-card">
         <div class="section-title">📍 Location Details</div>
@@ -372,7 +363,6 @@
     </div>
 </div>
 
-<!-- Export Tab -->
 <div id="exportTab" class="hidden">
     <div class="form-card">
         <div class="section-title">📥 Import Data</div>
@@ -388,7 +378,6 @@
     </div>
 </div>
 
-<!-- View/Edit Modal -->
 <div id="viewModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
@@ -601,7 +590,7 @@
             const key = item.replace(/\s/g, '');
             let value = inspection[key] || "NOT_CHECKED";
             let emoji = value === "OK" ? "✅" : (value === "DEFECT" ? "⚠️" : (value === "NA" ? "➖" : "❓"));
-            itemsHtml += `<tr style="border-bottom:1px solid #eee;"><td style="padding:6px 0;">${item}</td><td style="padding:6px 0;">${emoji} ${value}<tr></tr>`;
+            itemsHtml += `<tr style="border-bottom:1px solid #eee;"><td style="padding:6px 0;">${item}</td><td style="padding:6px 0;">${emoji} ${value}</td></tr>`;
         });
         itemsHtml += '赶';
         
