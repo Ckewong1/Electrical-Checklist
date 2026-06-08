@@ -4,6 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>KOUMS Electrical Checklist</title>
+    
+    <!-- Web Manifest (embedded in HTML) -->
+    <link rel="manifest" href="data:application/manifest+json,{
+        %22name%22: %22KOUMS Electrical Checklist%22,
+        %22short_name%22: %22KOUMS Elec%22,
+        %22description%22: %22Electrical inspection checklist for UMS Asrama Phase 2%22,
+        %22start_url%22: %22/%22,
+        %22display%22: %22standalone%22,
+        %22orientation%22: %22any%22,
+        %22theme_color%22: %22%231a73e8%22,
+        %22background_color%22: %22%23f0f2f5%22,
+        %22icons%22: [
+            {
+                %22src%22: %22https://via.placeholder.com/144/1a73e8/ffffff?text=K%22,
+                %22sizes%22: %22144x144%22,
+                %22type%22: %22image/png%22
+            },
+            {
+                %22src%22: %22https://via.placeholder.com/192/1a73e8/ffffff?text=K%22,
+                %22sizes%22: %22192x192%22,
+                %22type%22: %22image/png%22
+            },
+            {
+                %22src%22: %22https://via.placeholder.com/512/1a73e8/ffffff?text=K%22,
+                %22sizes%22: %22512x512%22,
+                %22type%22: %22image/png%22
+            }
+        ]
+    }">
+    
     <style>
         * {
             margin: 0;
