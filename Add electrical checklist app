@@ -5,34 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>KOUMS Electrical Checklist</title>
     
-    <!-- Web Manifest (embedded in HTML) -->
-    <link rel="manifest" href="data:application/manifest+json,{
-        %22name%22: %22KOUMS Electrical Checklist%22,
-        %22short_name%22: %22KOUMS Elec%22,
-        %22description%22: %22Electrical inspection checklist for UMS Asrama Phase 2%22,
-        %22start_url%22: %22/%22,
-        %22display%22: %22standalone%22,
-        %22orientation%22: %22any%22,
-        %22theme_color%22: %22%231a73e8%22,
-        %22background_color%22: %22%23f0f2f5%22,
-        %22icons%22: [
-            {
-                %22src%22: %22https://via.placeholder.com/144/1a73e8/ffffff?text=K%22,
-                %22sizes%22: %22144x144%22,
-                %22type%22: %22image/png%22
-            },
-            {
-                %22src%22: %22https://via.placeholder.com/192/1a73e8/ffffff?text=K%22,
-                %22sizes%22: %22192x192%22,
-                %22type%22: %22image/png%22
-            },
-            {
-                %22src%22: %22https://via.placeholder.com/512/1a73e8/ffffff?text=K%22,
-                %22sizes%22: %22512x512%22,
-                %22type%22: %22image/png%22
-            }
-        ]
-    }">
+    <!-- Link to manifest.json file -->
+    <link rel="manifest" href="manifest.json">
     
     <style>
         * {
@@ -48,7 +22,6 @@
             padding-bottom: 80px;
         }
 
-        /* App Bar */
         .app-bar {
             background: #1a73e8;
             color: white;
@@ -69,7 +42,6 @@
             opacity: 0.9;
         }
 
-        /* Stats Cards */
         .stats {
             display: flex;
             gap: 12px;
@@ -99,7 +71,6 @@
             color: #d32f2f;
         }
 
-        /* Form Card */
         .form-card, .list-card {
             background: white;
             border-radius: 16px;
@@ -116,7 +87,6 @@
             padding-left: 10px;
         }
 
-        /* Form Fields */
         .form-row {
             margin-bottom: 12px;
         }
@@ -143,7 +113,6 @@
             min-height: 60px;
         }
 
-        /* Grid for electrical items */
         .items-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -167,7 +136,6 @@
             font-size: 0.8rem;
         }
 
-        /* Buttons */
         .btn {
             padding: 12px;
             border: none;
@@ -204,7 +172,6 @@
             flex: 1;
         }
 
-        /* List Items */
         .inspection-item {
             background: #f8f9fa;
             border-radius: 12px;
@@ -245,7 +212,6 @@
             color: #888;
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -284,7 +250,6 @@
             cursor: pointer;
         }
 
-        /* Tabs */
         .tabs {
             display: flex;
             gap: 8px;
@@ -310,7 +275,6 @@
             display: none;
         }
 
-        /* Filter */
         .filter-bar {
             display: flex;
             gap: 8px;
@@ -351,7 +315,6 @@
     <button class="tab" onclick="showTab('export')">📤 Import/Export</button>
 </div>
 
-<!-- List Tab -->
 <div id="listTab">
     <div class="form-card">
         <div class="filter-bar">
@@ -368,7 +331,6 @@
     </div>
 </div>
 
-<!-- Form Tab -->
 <div id="formTab" class="hidden">
     <div class="form-card">
         <div class="section-title">📍 Location Details</div>
@@ -408,7 +370,6 @@
     </div>
 </div>
 
-<!-- Export Tab -->
 <div id="exportTab" class="hidden">
     <div class="form-card">
         <div class="section-title">📥 Import Data</div>
@@ -424,7 +385,6 @@
     </div>
 </div>
 
-<!-- View/Edit Modal -->
 <div id="viewModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
@@ -441,7 +401,6 @@
 </div>
 
 <script>
-    // Electrical items list (matches your spreadsheet)
     const ELECTRICAL_ITEMS = [
         "Fan", "2x28w T5 Light", "1x28w T5 Light", "Led 12w Light",
         "Socket", "Dist. Board (DB)", "1G 1 Way Switch", "3G 1 Way Switch",
@@ -451,7 +410,6 @@
     let inspections = [];
     let currentInspectionId = null;
 
-    // Load data from localStorage
     function loadData() {
         const saved = localStorage.getItem("koums_electrical");
         if (saved) {
@@ -462,14 +420,12 @@
         updateStats();
     }
 
-    // Save data to localStorage
     function saveData() {
         localStorage.setItem("koums_electrical", JSON.stringify(inspections));
         renderList();
         updateStats();
     }
 
-    // Render the electrical items grid in the form
     function renderItemsGrid() {
         const grid = document.getElementById("itemsGrid");
         grid.innerHTML = "";
@@ -489,7 +445,6 @@
         });
     }
 
-    // Get current form values
     function getFormValues() {
         const values = {};
         ELECTRICAL_ITEMS.forEach(item => {
@@ -501,7 +456,6 @@
         return values;
     }
 
-    // Set form values for editing
     function setFormValues(inspection) {
         document.getElementById("block").value = inspection.block;
         document.getElementById("unitNo").value = inspection.unitNo;
@@ -517,7 +471,6 @@
         });
     }
 
-    // Clear form
     function clearForm() {
         document.getElementById("unitNo").value = "";
         document.getElementById("location").value = "";
@@ -530,7 +483,6 @@
         });
     }
 
-    // Save inspection (create or update)
     function saveInspection() {
         const block = document.getElementById("block").value;
         const unitNo = document.getElementById("unitNo").value.trim();
@@ -554,12 +506,10 @@
         };
         
         if (currentInspectionId) {
-            // Update existing
             const index = inspections.findIndex(i => i.id === currentInspectionId);
             if (index !== -1) inspections[index] = inspection;
             currentInspectionId = null;
         } else {
-            // Create new
             inspections.unshift(inspection);
         }
         
@@ -569,7 +519,6 @@
         alert("Inspection saved successfully!");
     }
 
-    // Render the list view
     function renderList() {
         const container = document.getElementById("listContainer");
         const searchTerm = document.getElementById("searchInput")?.value.toLowerCase() || "";
@@ -595,7 +544,6 @@
         
         container.innerHTML = "";
         filtered.forEach(inspection => {
-            // Count defects
             let defectCount = 0;
             ELECTRICAL_ITEMS.forEach(item => {
                 const key = item.replace(/\s/g, '');
@@ -620,12 +568,10 @@
         });
     }
 
-    // Filter function
     function filterList() {
         renderList();
     }
 
-    // Update stats counters
     function updateStats() {
         document.getElementById("totalCount").innerText = inspections.length;
         let totalDefects = 0;
@@ -638,7 +584,6 @@
         document.getElementById("defectCount").innerText = totalDefects;
     }
 
-    // Open modal to view inspection
     function openModal(id) {
         currentInspectionId = id;
         const inspection = inspections.find(i => i.id === id);
@@ -703,14 +648,12 @@
         }
     }
 
-    // Export to CSV
     function exportToCSV() {
         if (inspections.length === 0) {
             alert("No data to export");
             return;
         }
         
-        // Headers
         let headers = ["Block", "Unit No", "Location", "Date", "Checked By", "Remarks", ...ELECTRICAL_ITEMS];
         let rows = [headers.join(",")];
         
@@ -741,7 +684,6 @@
         URL.revokeObjectURL(url);
     }
 
-    // Export to JSON
     function exportToJSON() {
         const dataStr = JSON.stringify(inspections, null, 2);
         const blob = new Blob([dataStr], { type: "application/json" });
@@ -753,7 +695,6 @@
         URL.revokeObjectURL(url);
     }
 
-    // Import JSON
     function importData() {
         const fileInput = document.getElementById("importFile");
         const file = fileInput.files[0];
@@ -781,7 +722,6 @@
         reader.readAsText(file);
     }
 
-    // Tab switching
     function showTab(tabName) {
         document.getElementById("listTab").classList.add("hidden");
         document.getElementById("formTab").classList.add("hidden");
@@ -791,7 +731,6 @@
         if (tabName === 'form') document.getElementById("formTab").classList.remove("hidden");
         if (tabName === 'export') document.getElementById("exportTab").classList.remove("hidden");
         
-        // Update active tab style
         document.querySelectorAll('.tab').forEach((tab, idx) => {
             if ((tabName === 'list' && idx === 0) ||
                 (tabName === 'form' && idx === 1) ||
@@ -807,7 +746,6 @@
         }
     }
 
-    // Initialize
     loadData();
 </script>
 </body>
