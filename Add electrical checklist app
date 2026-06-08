@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>KOUMS Electrical Checklist</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            padding: 16px;
+            padding-bottom: 80px;
+        }
+
+        /* App Bar */
+        .app-bar {
+            background: #1a73e8;
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .app-bar h1 {
+            font-size: 1.4rem;
+            margin-bottom: 4px;
+        }
+
+        .app-bar p {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        /* Stats Cards */
+        .stats {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .stat-card {
+            background: white;
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .stat-card .number {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .stat-card .label {
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .stat-card.defect .number {
+            color: #d32f2f;
+        }
+
+        /* Form Card */
+        .form-card, .list-card {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #1a73e8;
+            border-left: 4px solid #1a73e8;
+            padding-left: 10px;
+        }
+
+        /* Form Fields */
+        .form-row {
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-family: inherit;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        /* Grid for electrical items */
+        .items-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .item-field {
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 10px;
+        }
+
+        .item-field label {
+            font-size: 0.7rem;
+            margin-bottom: 4px;
+        }
+
+        .item-field select {
+            padding: 8px;
+            font-size: 0.8rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-primary {
+            background: #1a73e8;
+            color: white;
+            width: 100%;
+        }
+
+        .btn-danger {
+            background: #d32f2f;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .btn-group .btn {
+            flex: 1;
+        }
+
+        /* List Items */
+        .inspection-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .inspection-item:hover {
+            background: #e8eaed;
+        }
+
+        .inspection-header {
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .inspection-location {
+            color: #1a73e8;
+        }
+
+        .inspection-defects {
+            font-size: 0.75rem;
+            color: #d32f2f;
+        }
+
+        .inspection-date {
+            font-size: 0.7rem;
+            color: #888;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            max-width: 500px;
+            margin: 20px auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .modal-header h3 {
+            color: #1a73e8;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px;
+            background: #e0e0e0;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .tab.active {
+            background: #1a73e8;
+            color: white;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Filter */
+        .filter-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .filter-bar input {
+            flex: 1;
+        }
+
+        .filter-bar select {
+            width: auto;
+            min-width: 80px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-bar">
+    <h1>🔌 KOUMS Electrical Checklist</h1>
+    <p>UMS Asrama Phase 2 | B1 & B2</p>
+</div>
+
+<div class="stats">
+    <div class="stat-card">
+        <div class="number" id="totalCount">0</div>
+        <div class="label">Total Inspections</div>
+    </div>
+    <div class="stat-card defect">
+        <div class="number" id="defectCount">0</div>
+        <div class="label">Defects Found</div>
+    </div>
+</div>
+
+<div class="tabs">
+    <button class="tab active" onclick="showTab('list')">📋 Checklist</button>
+    <button class="tab" onclick="showTab('form')">➕ New Inspection</button>
+    <button class="tab" onclick="showTab('export')">📤 Import/Export</button>
+</div>
+
+<!-- List Tab -->
+<div id="listTab">
+    <div class="form-card">
+        <div class="filter-bar">
+            <input type="text" id="searchInput" placeholder="🔍 Search by unit or location" oninput="filterList()">
+            <select id="blockFilter" onchange="filterList()">
+                <option value="all">All Blocks</option>
+                <option value="B1">Block B1</option>
+                <option value="B2">Block B2</option>
+            </select>
+        </div>
+    </div>
+    <div class="list-card" id="listContainer">
+        <div class="empty-state">No inspections yet. Tap "New Inspection" to add.</div>
+    </div>
+</div>
+
+<!-- Form Tab -->
+<div id="formTab" class="hidden">
+    <div class="form-card">
+        <div class="section-title">📍 Location Details</div>
+        <div class="form-row">
+            <label>Block *</label>
+            <select id="block">
+                <option value="B1">B1</option>
+                <option value="B2">B2</option>
+            </select>
+        </div>
+        <div class="form-row">
+            <label>Unit No *</label>
+            <input type="text" id="unitNo" placeholder="e.g., 01-01, 02-15">
+        </div>
+        <div class="form-row">
+            <label>Location *</label>
+            <input type="text" id="location" placeholder="e.g., Bedroom 1, Living Room, Kitchen">
+        </div>
+
+        <div class="section-title">⚡ Electrical Items</div>
+        <div class="items-grid" id="itemsGrid"></div>
+
+        <div class="form-row">
+            <label>📝 Remarks</label>
+            <textarea id="remarks" placeholder="Any issues or notes..."></textarea>
+        </div>
+        <div class="form-row">
+            <label>👤 Checked By</label>
+            <input type="text" id="checkedBy" placeholder="Inspector name">
+        </div>
+
+        <button class="btn btn-primary" onclick="saveInspection()">💾 Save Inspection</button>
+        <div class="btn-group">
+            <button class="btn btn-secondary" onclick="clearForm()">Clear Form</button>
+            <button class="btn btn-secondary" onclick="showTab('list')">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Export Tab -->
+<div id="exportTab" class="hidden">
+    <div class="form-card">
+        <div class="section-title">📥 Import Data</div>
+        <input type="file" id="importFile" accept=".json" style="margin-bottom: 12px;">
+        <button class="btn btn-secondary" onclick="importData()" style="width:100%; margin-bottom:16px;">Import from JSON</button>
+        
+        <div class="section-title">📤 Export Data</div>
+        <button class="btn btn-secondary" onclick="exportToJSON()" style="width:100%; margin-bottom:8px;">Export as JSON</button>
+        <button class="btn btn-secondary" onclick="exportToCSV()" style="width:100%;">Export as CSV (Excel)</button>
+        
+        <div class="section-title" style="margin-top: 20px;">⚠️ Danger Zone</div>
+        <button class="btn btn-danger" onclick="deleteAllData()" style="width:100%;">Delete All Data</button>
+    </div>
+</div>
+
+<!-- View/Edit Modal -->
+<div id="viewModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Inspection Details</h3>
+            <button class="close-modal" onclick="closeModal()">✕</button>
+        </div>
+        <div id="modalBody"></div>
+        <div class="btn-group">
+            <button class="btn btn-secondary" onclick="editCurrentInspection()">✏️ Edit</button>
+            <button class="btn btn-danger" onclick="deleteCurrentInspection()">🗑️ Delete</button>
+            <button class="btn btn-primary" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Electrical items list (matches your spreadsheet)
+    const ELECTRICAL_ITEMS = [
+        "Fan", "2x28w T5 Light", "1x28w T5 Light", "Led 12w Light",
+        "Socket", "Dist. Board (DB)", "1G 1 Way Switch", "3G 1 Way Switch",
+        "2G 1 Way Switch", "Antenna", "Tel Socket"
+    ];
+
+    let inspections = [];
+    let currentInspectionId = null;
+
+    // Load data from localStorage
+    function loadData() {
+        const saved = localStorage.getItem("koums_electrical");
+        if (saved) {
+            inspections = JSON.parse(saved);
+        }
+        renderItemsGrid();
+        renderList();
+        updateStats();
+    }
+
+    // Save data to localStorage
+    function saveData() {
+        localStorage.setItem("koums_electrical", JSON.stringify(inspections));
+        renderList();
+        updateStats();
+    }
+
+    // Render the electrical items grid in the form
+    function renderItemsGrid() {
+        const grid = document.getElementById("itemsGrid");
+        grid.innerHTML = "";
+        ELECTRICAL_ITEMS.forEach(item => {
+            const div = document.createElement("div");
+            div.className = "item-field";
+            div.innerHTML = `
+                <label>${item}</label>
+                <select class="status-${item.replace(/\s/g, '')}">
+                    <option value="OK">✅ OK</option>
+                    <option value="DEFECT">⚠️ Defect</option>
+                    <option value="NA">➖ N/A</option>
+                    <option value="NOT_CHECKED">❓ Not Checked</option>
+                </select>
+            `;
+            grid.appendChild(div);
+        });
+    }
+
+    // Get current form values
+    function getFormValues() {
+        const values = {};
+        ELECTRICAL_ITEMS.forEach(item => {
+            const select = document.querySelector(`.status-${item.replace(/\s/g, '')}`);
+            if (select) {
+                values[item.replace(/\s/g, '')] = select.value;
+            }
+        });
+        return values;
+    }
+
+    // Set form values for editing
+    function setFormValues(inspection) {
+        document.getElementById("block").value = inspection.block;
+        document.getElementById("unitNo").value = inspection.unitNo;
+        document.getElementById("location").value = inspection.location;
+        document.getElementById("remarks").value = inspection.remarks || "";
+        document.getElementById("checkedBy").value = inspection.checkedBy || "";
+        
+        ELECTRICAL_ITEMS.forEach(item => {
+            const select = document.querySelector(`.status-${item.replace(/\s/g, '')}`);
+            if (select && inspection[item.replace(/\s/g, '')]) {
+                select.value = inspection[item.replace(/\s/g, '')];
+            }
+        });
+    }
+
+    // Clear form
+    function clearForm() {
+        document.getElementById("unitNo").value = "";
+        document.getElementById("location").value = "";
+        document.getElementById("remarks").value = "";
+        document.getElementById("checkedBy").value = "";
+        
+        ELECTRICAL_ITEMS.forEach(item => {
+            const select = document.querySelector(`.status-${item.replace(/\s/g, '')}`);
+            if (select) select.value = "NOT_CHECKED";
+        });
+    }
+
+    // Save inspection (create or update)
+    function saveInspection() {
+        const block = document.getElementById("block").value;
+        const unitNo = document.getElementById("unitNo").value.trim();
+        const location = document.getElementById("location").value.trim();
+        
+        if (!unitNo || !location) {
+            alert("Please fill in Unit No and Location");
+            return;
+        }
+        
+        const formValues = getFormValues();
+        const inspection = {
+            id: currentInspectionId || Date.now(),
+            block: block,
+            unitNo: unitNo,
+            location: location,
+            remarks: document.getElementById("remarks").value,
+            checkedBy: document.getElementById("checkedBy").value,
+            date: new Date().toISOString(),
+            ...formValues
+        };
+        
+        if (currentInspectionId) {
+            // Update existing
+            const index = inspections.findIndex(i => i.id === currentInspectionId);
+            if (index !== -1) inspections[index] = inspection;
+            currentInspectionId = null;
+        } else {
+            // Create new
+            inspections.unshift(inspection);
+        }
+        
+        saveData();
+        clearForm();
+        showTab('list');
+        alert("Inspection saved successfully!");
+    }
+
+    // Render the list view
+    function renderList() {
+        const container = document.getElementById("listContainer");
+        const searchTerm = document.getElementById("searchInput")?.value.toLowerCase() || "";
+        const blockFilter = document.getElementById("blockFilter")?.value || "all";
+        
+        let filtered = [...inspections];
+        
+        if (searchTerm) {
+            filtered = filtered.filter(i => 
+                i.unitNo.toLowerCase().includes(searchTerm) || 
+                i.location.toLowerCase().includes(searchTerm)
+            );
+        }
+        
+        if (blockFilter !== "all") {
+            filtered = filtered.filter(i => i.block === blockFilter);
+        }
+        
+        if (filtered.length === 0) {
+            container.innerHTML = '<div class="empty-state">No inspections found.</div>';
+            return;
+        }
+        
+        container.innerHTML = "";
+        filtered.forEach(inspection => {
+            // Count defects
+            let defectCount = 0;
+            ELECTRICAL_ITEMS.forEach(item => {
+                const key = item.replace(/\s/g, '');
+                if (inspection[key] === "DEFECT") defectCount++;
+            });
+            
+            const date = new Date(inspection.date);
+            const dateStr = date.toLocaleDateString();
+            
+            const div = document.createElement("div");
+            div.className = "inspection-item";
+            div.onclick = () => openModal(inspection.id);
+            div.innerHTML = `
+                <div class="inspection-header">
+                    <span class="inspection-location">${inspection.block} - Unit ${inspection.unitNo}</span>
+                    <span class="inspection-date">${dateStr}</span>
+                </div>
+                <div>📍 ${inspection.location}</div>
+                <div class="inspection-defects">${defectCount > 0 ? `⚠️ ${defectCount} defect(s) found` : "✅ No defects"}</div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    // Filter function
+    function filterList() {
+        renderList();
+    }
+
+    // Update stats counters
+    function updateStats() {
+        document.getElementById("totalCount").innerText = inspections.length;
+        let totalDefects = 0;
+        inspections.forEach(inspection => {
+            ELECTRICAL_ITEMS.forEach(item => {
+                const key = item.replace(/\s/g, '');
+                if (inspection[key] === "DEFECT") totalDefects++;
+            });
+        });
+        document.getElementById("defectCount").innerText = totalDefects;
+    }
+
+    // Open modal to view inspection
+    function openModal(id) {
+        currentInspectionId = id;
+        const inspection = inspections.find(i => i.id === id);
+        if (!inspection) return;
+        
+        const modalBody = document.getElementById("modalBody");
+        const date = new Date(inspection.date);
+        
+        let itemsHtml = '<table style="width:100%; font-size:0.85rem; border-collapse:collapse;">';
+        ELECTRICAL_ITEMS.forEach(item => {
+            const key = item.replace(/\s/g, '');
+            let value = inspection[key] || "NOT_CHECKED";
+            let emoji = value === "OK" ? "✅" : (value === "DEFECT" ? "⚠️" : (value === "NA" ? "➖" : "❓"));
+            itemsHtml += `<tr style="border-bottom:1px solid #eee;"><td style="padding:6px 0;">${item}</td><td style="padding:6px 0;">${emoji} ${value}</td></tr>`;
+        });
+        itemsHtml += '</table>';
+        
+        modalBody.innerHTML = `
+            <p><strong>Block:</strong> ${inspection.block}</p>
+            <p><strong>Unit No:</strong> ${inspection.unitNo}</p>
+            <p><strong>Location:</strong> ${inspection.location}</p>
+            <p><strong>Date:</strong> ${date.toLocaleString()}</p>
+            <p><strong>Checked By:</strong> ${inspection.checkedBy || "-"}</p>
+            <p><strong>Remarks:</strong> ${inspection.remarks || "-"}</p>
+            <hr>
+            <strong>Electrical Items Status:</strong>
+            ${itemsHtml}
+        `;
+        
+        document.getElementById("viewModal").style.display = "block";
+    }
+
+    function closeModal() {
+        document.getElementById("viewModal").style.display = "none";
+        currentInspectionId = null;
+    }
+
+    function editCurrentInspection() {
+        const inspection = inspections.find(i => i.id === currentInspectionId);
+        if (inspection) {
+            closeModal();
+            showTab('form');
+            setFormValues(inspection);
+            currentInspectionId = inspection.id;
+        }
+    }
+
+    function deleteCurrentInspection() {
+        if (confirm("Are you sure you want to delete this inspection?")) {
+            inspections = inspections.filter(i => i.id !== currentInspectionId);
+            saveData();
+            closeModal();
+        }
+    }
+
+    function deleteAllData() {
+        if (confirm("⚠️ WARNING: This will delete ALL inspection data. Are you absolutely sure?")) {
+            inspections = [];
+            saveData();
+            clearForm();
+            alert("All data has been deleted.");
+        }
+    }
+
+    // Export to CSV
+    function exportToCSV() {
+        if (inspections.length === 0) {
+            alert("No data to export");
+            return;
+        }
+        
+        // Headers
+        let headers = ["Block", "Unit No", "Location", "Date", "Checked By", "Remarks", ...ELECTRICAL_ITEMS];
+        let rows = [headers.join(",")];
+        
+        inspections.forEach(insp => {
+            let row = [
+                `"${insp.block}"`,
+                `"${insp.unitNo}"`,
+                `"${insp.location}"`,
+                `"${new Date(insp.date).toLocaleString()}"`,
+                `"${insp.checkedBy || ""}"`,
+                `"${(insp.remarks || "").replace(/"/g, '""')}"`,
+            ];
+            
+            ELECTRICAL_ITEMS.forEach(item => {
+                const key = item.replace(/\s/g, '');
+                row.push(`"${insp[key] || "NOT_CHECKED"}"`);
+            });
+            
+            rows.push(row.join(","));
+        });
+        
+        const blob = new Blob([rows.join("\n")], { type: "text/csv" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `koums_electrical_${new Date().toISOString().slice(0,19)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    // Export to JSON
+    function exportToJSON() {
+        const dataStr = JSON.stringify(inspections, null, 2);
+        const blob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `koums_electrical_backup.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    // Import JSON
+    function importData() {
+        const fileInput = document.getElementById("importFile");
+        const file = fileInput.files[0];
+        if (!file) {
+            alert("Please select a JSON file to import");
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const imported = JSON.parse(e.target.result);
+                if (Array.isArray(imported)) {
+                    inspections = [...imported, ...inspections];
+                    saveData();
+                    alert(`Imported ${imported.length} records successfully!`);
+                    fileInput.value = "";
+                } else {
+                    alert("Invalid file format");
+                }
+            } catch(err) {
+                alert("Error parsing file");
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    // Tab switching
+    function showTab(tabName) {
+        document.getElementById("listTab").classList.add("hidden");
+        document.getElementById("formTab").classList.add("hidden");
+        document.getElementById("exportTab").classList.add("hidden");
+        
+        if (tabName === 'list') document.getElementById("listTab").classList.remove("hidden");
+        if (tabName === 'form') document.getElementById("formTab").classList.remove("hidden");
+        if (tabName === 'export') document.getElementById("exportTab").classList.remove("hidden");
+        
+        // Update active tab style
+        document.querySelectorAll('.tab').forEach((tab, idx) => {
+            if ((tabName === 'list' && idx === 0) ||
+                (tabName === 'form' && idx === 1) ||
+                (tabName === 'export' && idx === 2)) {
+                tab.classList.add('active');
+            } else {
+                tab.classList.remove('active');
+            }
+        });
+        
+        if (tabName === 'form' && !currentInspectionId) {
+            clearForm();
+        }
+    }
+
+    // Initialize
+    loadData();
+</script>
+</body>
+</html>
